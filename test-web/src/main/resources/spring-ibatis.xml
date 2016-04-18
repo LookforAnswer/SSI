@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+  
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" 
+	  	init-method="init"  destroy-method="close">  
+        
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		
+		<!-- 连接池最大使用连接数 -->
+		<property name="maxActive" value="${pool.maxActive}" />
+	   	<!-- 初始化连接大小 -->
+		<property name="initialSize" value="${pool.initialSize}" />
+		<!-- 获取连接最大等待时间 -->
+		<property name="maxWait" value="${pool.maxWait}" />
+		<!-- 连接池最大空闲 -->
+		<property name="maxIdle" value="${pool.maxIdle}" />
+		<!-- 连接池最小空闲 -->
+		<property name="minIdle" value="${pool.minIdle}" />
+		<!-- 自动清除无用连接 -->
+		<property name="removeAbandoned" value="${pool.removeAbandoned}" />
+		<!-- 清除无用连接的等待时间 -->
+		<property name="removeAbandonedTimeout" value="${pool.removeAbandonedTimeout}" />
+		
+		<!-- 连接属性 -->
+		<property name="connectionProperties" value="${connectionProperties}" />
+    </bean>  
+  
+    <bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean" >  
+        <property name="configLocation">  <!-- name 为configLocation或s  不可为其他 -->  
+            <value>classpath:sqlMapConfig.xml</value> <!-- 不区分大小写，路径前可加'/' -->  
+        </property> 
+        <!-- <property name="mappingLocations" value="classpath:com/qxy/bookshop/sqlmap/*.xml" /> -->  
+        <!-- dataSource不是必需 -->  
+        <property name="dataSource">  
+            <ref local="dataSource" />  
+        </property>  
+    </bean>  
+  
+    <!-- transactionManager不是必需  -->  
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">  
+        <property name="dataSource">  
+            <ref local="dataSource" />  
+        </property>  
+    </bean>  
+</beans>
